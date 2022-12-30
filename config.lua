@@ -50,7 +50,7 @@ lvim.builtin.treesitter.ensure_installed = {
   "llvm",
   "lua",
   "make",
-  -- TODO: add support for "markdown",
+  "markdown",
   "nix",
   "php",
   "python",
@@ -126,7 +126,9 @@ lvim.plugins = {
   {
     "folke/trouble.nvim",
     cmd = "TroubleToggle",
+    module = "trouble",
     config = function()
+      require("trouble").setup {}
       -- TODO: doesn't sets keys
       lvim.builtin.which_key.mappings["t"] = {
         name = "+Trouble",
@@ -137,19 +139,6 @@ lvim.plugins = {
         l = { "<cmd>Trouble loclist<cr>", "LocationList" },
         w = { "<cmd>Trouble workspace_diagnostics<cr>", "Wordspace Diagnostics" },
       }
-    end
-  },
-  {
-    -- TODO: remove double installation
-    "lukas-reineke/indent-blankline.nvim",
-    event = "BufRead",
-    setup = function()
-      vim.g.indentLine_enabled = 1
-      vim.g.indent_blankline_char = "▏"
-      vim.g.indent_blankline_filetype_exclude = { "help", "terminal", "dashboard" }
-      vim.g.indent_blankline_buftype_exclude = { "terminal" }
-      vim.g.indent_blankline_show_trailing_blankline_indent = false
-      vim.g.indent_blankline_show_first_indent_level = false
     end
   },
   {
@@ -287,6 +276,15 @@ lvim.plugins = {
         c = { "<cmd>Telescope flutter commands<CR>", "List flutter commands" },
       }
     end
+  },
+  {
+    "p00f/nvim-ts-rainbow",
+    config = function()
+      lvim.builtin.treesitter.rainbow.enable = true
+    end
+  },
+  {
+    "dccsillag/magma-nvim",
   },
 }
 
