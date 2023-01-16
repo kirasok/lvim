@@ -126,20 +126,6 @@ lvim.plugins = {
   {
     "folke/trouble.nvim",
     cmd = "TroubleToggle",
-    module = "trouble",
-    config = function()
-      require("trouble").setup {}
-      -- TODO: doesn't sets keys
-      lvim.builtin.which_key.mappings["t"] = {
-        name = "+Trouble",
-        r = { "<cmd>Trouble lsp_references<cr>", "References" },
-        f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
-        d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
-        q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
-        l = { "<cmd>Trouble loclist<cr>", "LocationList" },
-        w = { "<cmd>Trouble workspace_diagnostics<cr>", "Wordspace Diagnostics" },
-      }
-    end
   },
   {
     "iamcco/markdown-preview.nvim",
@@ -309,6 +295,16 @@ require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/lvim/snippets
 vim.g.minimap_auto_start = 1
 vim.g.minimap_width = 10
 vim.g.livepreview_previewer = "zathura"
+
+lvim.builtin.which_key.mappings["t"] = {
+  name = "+Trouble",
+  r = { "<cmd>Trouble lsp_references<cr>", "References" },
+  f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
+  d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
+  q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
+  l = { "<cmd>Trouble loclist<cr>", "LocationList" },
+  w = { "<cmd>Trouble workspace_diagnostics<cr>", "Wordspace Diagnostics" },
+}
 
 -- TODO: keybindings for Additional Plugins
 -- FIX: Bracey doesn't compile .ts
