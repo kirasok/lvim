@@ -10,7 +10,7 @@ vim.opt.wrap = true
 
 -- spell
 vim.opt.spell = true
-vim.opt.spelllang = { "en", "ru" }
+vim.opt.spelllang = { "en" }
 
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
@@ -91,15 +91,9 @@ code_actions.setup {
 -- Additional Plugins
 lvim.plugins = {
   {
-    "https://github.com/catppuccin/nvim",
-    as = "catppuccin",
+    "catppuccin/nvim",
+    name = "catppuccin",
   },
-  -- {
-  --   "wfxr/minimap.vim",
-  --   config = function()
-  --     -- vim.g.
-  --   end
-  -- },
   {
     "norcalli/nvim-colorizer.lua",
     config = function()
@@ -129,7 +123,7 @@ lvim.plugins = {
   },
   {
     "iamcco/markdown-preview.nvim",
-    run = "cd app && npm install",
+    build = "cd app && npm install",
     ft = "markdown",
   },
   {
@@ -148,7 +142,6 @@ lvim.plugins = {
   {
     "folke/persistence.nvim",
     event = "BufReadPre", -- this will only start session saving when an actual file was opened
-    module = "persistence",
     config = function()
       require("persistence").setup {
         dir = vim.fn.expand(vim.fn.stdpath "config" .. "/session/"),
@@ -185,7 +178,7 @@ lvim.plugins = {
   {
     "turbio/bracey.vim",
     cmd = { "Bracey", "BracyStop", "BraceyReload", "BraceyEval" },
-    run = "npm install --prefix server",
+    build = "npm install --prefix server",
   },
   {
     "dbeniamine/cheat.sh-vim"
@@ -225,7 +218,7 @@ lvim.plugins = {
   {
     "akinsho/flutter-tools.nvim",
     ft = "dart",
-    requires = { 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
+    dependencies = { 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
     config = function()
       require("flutter-tools").setup {
         debugger = {
