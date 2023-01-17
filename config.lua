@@ -9,8 +9,8 @@ lvim.colorscheme = "catppuccin"
 vim.opt.wrap = true
 
 -- spell
-vim.opt.spell = true
-vim.opt.spelllang = { "en" }
+vim.opt.spell = false -- enable only in specific files TODO: enable automatically or fix code spell check
+vim.opt.spelllang = { "en", "ru" }
 
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
@@ -26,75 +26,35 @@ lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
 lvim.builtin.treesitter.ensure_installed = {
-  "bash",
-  "bibtex",
-  "c",
-  "c_sharp",
-  "cmake",
-  "comment",
-  "cpp",
-  "css",
-  "dart",
-  "dockerfile",
-  "dot",
-  "go",
-  "haskell",
-  "html",
-  "http",
-  "java",
-  "javascript",
-  "jsdoc",
-  "json",
-  "kotlin",
   "latex",
-  "llvm",
   "lua",
-  "make",
   "markdown",
-  "nix",
-  "php",
-  "python",
-  "rasi",
-  "regex",
-  "ruby",
-  "rust",
-  "scss",
-  "toml",
-  -- TODO: what is "tsx"?
-  "typescript",
-  "vim",
-  "yaml",
 }
 lvim.builtin.treesitter.highlight.enabled = true
 
-lvim.lsp.installer.automatic_installation = true;
+lvim.lsp.installer.automatic_installation = false -- BUG: can't disable automatic installation
+-- BUG: lvim doesn't see installed lsp
 --require("lvim.lsp.manager").setup("dartls"); WARN: flutter-tools.nvim setup dartls themselves
 
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
-  { name = "rustfmt" },
-  -- { name = "mdformat" }, It make [ to \[ that used in Zettelkasten
-  { name = "jq" },
-  { name = "yapf" },
-  { name = "isort" },
 }
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
-  { name = "proselint" },
-  { name = "flake8" },
 }
 local code_actions = require "lvim.lsp.null-ls.code_actions"
 code_actions.setup {
-  { name = "proselint" },
 }
 
 -- Additional Plugins
 lvim.plugins = {
   {
+    -- Catppuccin colorscheme
     "catppuccin/nvim",
     name = "catppuccin",
   },
   {
+    -- Colorize colors
     "norcalli/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup({ "*" }, {
@@ -109,24 +69,31 @@ lvim.plugins = {
     end,
   },
   {
+    -- Print function signature in popup window
     "ray-x/lsp_signature.nvim",
     event = "BufRead",
     config = function() require "lsp_signature".on_attach() end,
   },
   {
+    -- Outline of symobls in right bar
     "simrat39/symbols-outline.nvim",
-    cmd = "SymbolsOutline",
+    config = function()
+      require('symbols-outline').setup()
+    end
   },
   {
+    -- list checkers messages
     "folke/trouble.nvim",
     cmd = "TroubleToggle",
   },
   {
+    -- perview markdown in browser
     "iamcco/markdown-preview.nvim",
     build = "cd app && npm install",
     ft = "markdown",
   },
   {
+    -- open fiels in the last place you left
     "ethanholz/nvim-lastplace",
     event = "BufRead",
     config = function()
@@ -139,30 +106,38 @@ lvim.plugins = {
       })
     end,
   },
+  -- {
+  --   -- saves sessions for quick open
+  --   "folke/persistence.nvim",
+  --   event = "BufReadPre", -- this will only start session saving when an actual file was opened
+  --   config = function()
+  --     require("persistence").setup {
+  --       dir = vim.fn.expand(vim.fn.stdpath "config" .. "/session/"),
+  --       options = { "buffers", "curdir", "tabpages", "winsize" },
+  --     }
+  --     lvim.builtin.which_key.mappings["S"] = {
+  --       name = "Session",
+  --       c = { "<cmd>lua require('persistence').load()<cr>", "Restore last session for current dir" },
+  --       l = { "<cmd>lua require('persistence').load({ last = true })<cr>", "Restore last session" },
+  --       Q = { "<cmd>lua require('persistence').stop()<cr>", "Quit without saving session" },
+  --     }
+  --   end,
+  -- },
   {
-    "folke/persistence.nvim",
-    event = "BufReadPre", -- this will only start session saving when an actual file was opened
-    config = function()
-      require("persistence").setup {
-        dir = vim.fn.expand(vim.fn.stdpath "config" .. "/session/"),
-        options = { "buffers", "curdir", "tabpages", "winsize" },
-      }
-      lvim.builtin.which_key.mappings["S"] = {
-        name = "Session",
-        c = { "<cmd>lua require('persistence').load()<cr>", "Restore last session for current dir" },
-        l = { "<cmd>lua require('persistence').load({ last = true })<cr>", "Restore last session" },
-        Q = { "<cmd>lua require('persistence').stop()<cr>", "Quit without saving session" },
-      }
-    end,
-  },
-  {
+    -- Colorize words
     "folke/todo-comments.nvim",
+    dependencies = { "folke/trouble.nvim", },
     event = "BufRead",
     config = function()
       require("todo-comments").setup()
+      lvim.builtin.which_key.mappings["t"] = {
+        name = "Trouble",
+        t = { "<cmd>TodoTrouble<CR>", "List todos" }
+      } -- BUG: can't set inside lazy
     end,
   },
   {
+    -- highlight cursor word
     "itchyny/vim-cursorword",
     event = { "BufEnter", "BufNewFile" },
     config = function()
@@ -176,14 +151,16 @@ lvim.plugins = {
     end
   },
   {
+    -- live js server
     "turbio/bracey.vim",
     cmd = { "Bracey", "BracyStop", "BraceyReload", "BraceyEval" },
     build = "npm install --prefix server",
   },
+  -- {
+  --   "dbeniamine/cheat.sh-vim" -- use cheat.sh
+  -- },
   {
-    "dbeniamine/cheat.sh-vim"
-  },
-  {
+    -- manage zettelkasten
     "mickael-menu/zk-nvim",
     ft = "markdown",
     config = function()
@@ -210,12 +187,14 @@ lvim.plugins = {
     end
   },
   {
+    -- autoclose and autorename html tags
     "windwp/nvim-ts-autotag",
     config = function()
       require("nvim-ts-autotag").setup()
     end,
   },
   {
+    -- tools to use with flutter
     "akinsho/flutter-tools.nvim",
     ft = "dart",
     dependencies = { 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
@@ -257,16 +236,62 @@ lvim.plugins = {
     end
   },
   {
+    -- rainbow parentheses
     "p00f/nvim-ts-rainbow",
     config = function()
       lvim.builtin.treesitter.rainbow.enable = true
+      require("nvim-treesitter.configs").setup {
+        rainbow = {
+          enable = true,
+          extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+        }
+      }
     end
   },
   {
-    "dccsillag/magma-nvim",
+    -- better %
+    "andymass/vim-matchup",
+    event = "CursorMoved",
+    config = function()
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+    end,
+  },
+  {
+    "sindrets/diffview.nvim",
+    event = "BufRead",
+  },
+  {
+    "f-person/git-blame.nvim",
+    event = "BufRead",
+    config = function()
+      vim.cmd "highlight default link gitblame SpecialComment"
+      vim.g.gitblame_enabled = 0
+    end,
+  },
+  {
+    "romgrk/nvim-treesitter-context",
+    config = function()
+      require("treesitter-context").setup {
+        enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+        throttle = true, -- Throttles plugin updates (may improve performance)
+        max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+        patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
+          -- For all filetypes
+          -- Note that setting an entry here replaces all other patterns for this entry.
+          -- By setting the 'default' entry below, you can control which nodes you want to
+          -- appear in the context window.
+          default = {
+            'class',
+            'function',
+            'method',
+          },
+        },
+      }
+    end
   },
 }
 
+-- highlight luasnip nodes
 local types = require("luasnip.util.types")
 require 'luasnip'.config.setup({
   ext_opts = {
@@ -285,12 +310,10 @@ require 'luasnip'.config.setup({
 require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/lvim/snippets" })
 
 -- Additional Plugins config
-vim.g.minimap_auto_start = 1
-vim.g.minimap_width = 10
 vim.g.livepreview_previewer = "zathura"
 
 lvim.builtin.which_key.mappings["t"] = {
-  name = "+Trouble",
+  name = "Trouble",
   r = { "<cmd>Trouble lsp_references<cr>", "References" },
   f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
   d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
