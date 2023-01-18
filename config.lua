@@ -130,10 +130,10 @@ lvim.plugins = {
     event = "BufRead",
     config = function()
       require("todo-comments").setup()
-      lvim.builtin.which_key.mappings["t"] = {
-        name = "Trouble",
-        t = { "<cmd>TodoTrouble<CR>", "List todos" }
-      } -- BUG: can't set inside lazy
+      -- lvim.builtin.which_key.mappings["t"] = {
+      --   name = "Trouble",
+      --   t = { "<cmd>TodoTrouble<CR>", "List todos" }
+      -- } -- BUG: overrides mappings for trouble
     end,
   },
   {
@@ -257,6 +257,7 @@ lvim.plugins = {
     end,
   },
   {
+    -- diffview for git
     "sindrets/diffview.nvim",
     event = "BufRead",
   },
@@ -269,6 +270,7 @@ lvim.plugins = {
   --   end,
   -- },
   {
+    -- show current ccontext eg class -> function -> loop
     "romgrk/nvim-treesitter-context",
     config = function()
       require("treesitter-context").setup {
@@ -289,6 +291,71 @@ lvim.plugins = {
       }
     end
   },
+  {
+    -- removes all unnecessary views and centers text
+    "folke/zen-mode.nvim",
+    config = function()
+      require("zen-mode").setup {
+      }
+    end
+  },
+  {
+    -- snippets for latex, thanks iurimateus and gillescastel
+    "iurimateus/luasnip-latex-snippets.nvim",
+    ft = "tex",
+    dependencies = { "L3MON4D3/LuaSnip", "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require 'luasnip-latex-snippets'.setup({ use_treesitter = true })
+    end,
+  },
+  {
+    -- configs texlab to sync cursor position with zathura BUG: not working
+    'f3fora/nvim-texlabconfig',
+    ft = { 'tex', 'bib' },
+    config = function()
+      require('texlabconfig').setup()
+      local lspconfig = require('lspconfig')
+      local executable = 'zathura'
+      local args = {
+        '--synctex-editor-command',
+        [[nvim-texlabconfig -file '%{input}' -line %{line}]],
+        '--synctex-forward',
+        '%l:1:%f',
+        '%p',
+      }
+
+      lspconfig.texlab.setup({
+        settings = {
+          texlab = {
+            build = {
+              executable = 'latexmk',
+              args = { '-pdf', '-interaction=nonstopmode', '-synctex=1', '%f' },
+              onSave = true,
+              forwardSearchAfter = true,
+            },
+            chktex = {
+              onOpenAndSave = true;
+            },
+            forwardSearch = {
+              executable = executable,
+              args = args,
+            },
+            formatterLineLength = 0,
+          },
+        },
+      })
+    end,
+    build = 'go build -o ~/.local/bin/'
+  },
+  {
+    -- conceal things for better document editing
+    'KeitaNakamura/tex-conceal.vim',
+    ft = "tex",
+    config = function()
+      vim.opt.conceallevel = 2
+      vim.g["tex_conceal"] = "abdgm"
+    end,
+  }
 }
 
 -- highlight luasnip nodes
