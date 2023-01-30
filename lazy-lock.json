@@ -60,6 +60,7 @@
   "vim-illuminate": { "branch": "master", "commit": "da80f3877896adcf77f59fb0bf74e9601615d372" },
   "vim-matchup": { "branch": "master", "commit": "959e0e79ea240cdee29efbdd0d2e2e718931ccec" },
   "which-key.nvim": { "branch": "main", "commit": "e4fa445065a2bb0bbc3cca85346b67817f28e83e" },
+  "wilder.nvim": { "branch": "master", "commit": "679f348dc90d80ff9ba0e7c470c40a4d038dcecf" },
   "zen-mode.nvim": { "branch": "main", "commit": "2c8f9f3758a4c430ff867e547741424ac16208bb" },
   "zk-nvim": { "branch": "main", "commit": "2fd9f9f29270bb28477e000100625276ec2a2377" }
 }
