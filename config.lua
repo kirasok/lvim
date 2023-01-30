@@ -52,9 +52,11 @@ require("lvim.lsp.manager").setup("nil")
 
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
+  { name = "prettier" },
 }
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
+  { name = "write_good" },
 }
 local code_actions = require "lvim.lsp.null-ls.code_actions"
 code_actions.setup {
