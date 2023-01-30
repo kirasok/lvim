@@ -9,8 +9,9 @@ lvim.colorscheme = "catppuccin"
 vim.opt.wrap = true
 
 -- spell
-vim.opt.spell = false -- enable only in specific files TODO: enable automatically or fix code spell check
+vim.opt.spell = true -- enable only in specific files
 vim.opt.spelllang = { "en", "ru" }
+lvim.keys.insert_mode["<C-l>"] = "<Esc>[s1z=`]a"
 
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
@@ -32,9 +33,22 @@ lvim.builtin.treesitter.ensure_installed = {
 }
 lvim.builtin.treesitter.highlight.enabled = true
 
+local sources_to_delete = {
+  "buffer",
+}
+local new_sources = vim.tbl_filter(function(source)
+  return not vim.tbl_contains(sources_to_delete, source.name)
+end, lvim.builtin.cmp.sources)
+
+-- vim.list_extend(new_sources, {
+--   -- { name = "git", priority_weight = 110 }, -- TODO: think about adding
+-- })
+
+lvim.builtin.cmp.sources = new_sources
+
 lvim.lsp.installer.automatic_installation = false -- BUG: can't disable automatic installation
--- BUG: lvim doesn't see installed lsp
 --require("lvim.lsp.manager").setup("dartls"); WARN: flutter-tools.nvim setup dartls themselves
+require("lvim.lsp.manager").setup("nil")
 
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
