@@ -402,6 +402,18 @@ lvim.plugins = {
           }))
         end,
     },
+    {
+        "untitled-ai/jupyter_ascending.vim",
+        ft = "python",
+        config = function()
+          lvim.builtin.which_key.mappings["r"] = {
+              name = "Jupyter",
+              r = { "<cmd>call jupyter_ascending#execute()<CR>", "Execute cell" },
+              R = { "<cmd>call jupyter_ascending#execute_all()<CR>", "Execute all cells" },
+              q = { "<cmd>call jupyter_ascending#restart()<CR>", "Restart kernel" },
+          }
+        end,
+    },
 }
 
 -- highlight luasnip nodes
