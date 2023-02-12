@@ -46,9 +46,12 @@ end, lvim.builtin.cmp.sources)
 
 lvim.builtin.cmp.sources = new_sources
 
-lvim.lsp.installer.automatic_installation = false -- BUG: can't disable automatic installation
+lvim.lsp.installer.setup.automatic_installation = false
 --require("lvim.lsp.manager").setup("dartls"); WARN: flutter-tools.nvim setup dartls themselves
 require("lvim.lsp.manager").setup("nil")
+require("lvim.lsp.manager").setup("clangd")
+require("lvim.lsp.manager").setup("texlab")
+require("lvim.lsp.manager").setup("yaml-language-server")
 
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
