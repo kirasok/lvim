@@ -23,9 +23,11 @@ lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Project
 lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
 
+-- nvimtree
 lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
+-- treesitter
 lvim.builtin.treesitter.ensure_installed = {
     "latex",
     "lua",
@@ -33,6 +35,7 @@ lvim.builtin.treesitter.ensure_installed = {
 }
 lvim.builtin.treesitter.highlight.enabled = true
 
+-- remove buffer as source
 local sources_to_delete = {
     "buffer",
 }
@@ -46,24 +49,60 @@ local new_sources = vim.tbl_filter(function(source)
 
 lvim.builtin.cmp.sources = new_sources
 
-lvim.lsp.installer.setup.automatic_installation = false
+-- lsp installer
+lvim.lsp.installer.setup.automatic_installation = false -- do not install lsp server automatically
 --require("lvim.lsp.manager").setup("dartls"); WARN: flutter-tools.nvim setup dartls themselves
-require("lvim.lsp.manager").setup("nil")
-require("lvim.lsp.manager").setup("clangd")
-require("lvim.lsp.manager").setup("texlab")
-require("lvim.lsp.manager").setup("yaml-language-server")
+require("lvim.lsp.manager").setup("nil") -- nix
+require("lvim.lsp.manager").setup("clangd") -- c/c++
+require("lvim.lsp.manager").setup("texlab") -- latex
+require("lvim.lsp.manager").setup("yaml-language-server") -- yaml (why not?)
 
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
-    { name = "prettier" },
+    { name = "prettier" }, -- markdown/js/etc
 }
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
-    { name = "write_good" },
+    { name = "write_good" }, -- text/markdown/latex
 }
 local code_actions = require "lvim.lsp.null-ls.code_actions"
 code_actions.setup {
 }
+
+-- highlight luasnip nodes
+local types = require("luasnip.util.types")
+require 'luasnip'.config.setup({
+    ext_opts = {
+        [types.choiceNode] = {
+            active = {
+                virt_text = { { "●", "GruvboxOrange" } }
+            }
+        },
+        [types.insertNode] = {
+            active = {
+                virt_text = { { "●", "GruvboxBlue" } }
+            }
+        }
+    },
+})
+require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/lvim/snippets" })
+
+-- Additional Plugins config
+vim.g.livepreview_previewer = "zathura"
+
+-- Trouble keybinds BUG:should be move to it's respective plugin but not work here
+lvim.builtin.which_key.mappings["t"] = {
+    name = "Trouble",
+    r = { "<cmd>Trouble lsp_references<cr>", "References" },
+    f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
+    d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
+    q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
+    l = { "<cmd>Trouble loclist<cr>", "LocationList" },
+    w = { "<cmd>Trouble workspace_diagnostics<cr>", "Wordspace Diagnostics" },
+}
+
+-- TODO: keybindings for Additional Plugins
+-- FIX: Bracey doesn't compile .ts
 
 -- Additional Plugins
 lvim.plugins = {
@@ -80,9 +119,7 @@ lvim.plugins = {
               RGB = true, -- #RGB hex codes
               RRGGBB = true, -- #RRGGBB hex codes
               RRGGBBAA = true, -- #RRGGBBAA hex codes
-              rgb_fn = true, -- CSS rgb() and rgba() functions
-              hsl_fn = true, -- CSS hsl() and hsla() functions
-              css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+              rgb_fn = true, -- CSS rgb() and rgba() functions hsl_fn = true, -- CSS hsl() and hsla() functions css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
               css_fn = true, -- Enable all CSS *functions*: rgb_fn, hsl_fn
           })
         end,
@@ -104,6 +141,9 @@ lvim.plugins = {
         -- list checkers messages
         "folke/trouble.nvim",
         cmd = "TroubleToggle",
+        config = function()
+
+        end,
     },
     {
         -- perview markdown in browser
@@ -281,6 +321,7 @@ lvim.plugins = {
         event = "BufRead",
     },
     {
+        -- know whom to blame for this code
         "f-person/git-blame.nvim",
         event = "BufRead",
         config = function()
@@ -376,6 +417,7 @@ lvim.plugins = {
         end,
     },
     {
+        -- nice autocomplete for :
         'gelguy/wilder.nvim',
         config = function()
           local wilder = require('wilder')
@@ -403,6 +445,7 @@ lvim.plugins = {
         end,
     },
     {
+        -- plugin to sync .py with .ipynb
         "untitled-ai/jupyter_ascending.vim",
         ft = "python",
         config = function()
@@ -415,47 +458,14 @@ lvim.plugins = {
         end,
     },
     {
+        -- preview markdown
         "iamcco/markdown-preview.nvim",
         build = "cd app && npm install",
+        ft = { "markdown" },
         init = function()
           vim.g.mkdp_filetypes = {
               "markdown"
           }
         end,
-        ft = { "markdown" },
     },
 }
-
--- highlight luasnip nodes
-local types = require("luasnip.util.types")
-require 'luasnip'.config.setup({
-    ext_opts = {
-        [types.choiceNode] = {
-            active = {
-                virt_text = { { "●", "GruvboxOrange" } }
-            }
-        },
-        [types.insertNode] = {
-            active = {
-                virt_text = { { "●", "GruvboxBlue" } }
-            }
-        }
-    },
-})
-require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/lvim/snippets" })
-
--- Additional Plugins config
-vim.g.livepreview_previewer = "zathura"
-
-lvim.builtin.which_key.mappings["t"] = {
-    name = "Trouble",
-    r = { "<cmd>Trouble lsp_references<cr>", "References" },
-    f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
-    d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
-    q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
-    l = { "<cmd>Trouble loclist<cr>", "LocationList" },
-    w = { "<cmd>Trouble workspace_diagnostics<cr>", "Wordspace Diagnostics" },
-}
-
--- TODO: keybindings for Additional Plugins
--- FIX: Bracey doesn't compile .ts
