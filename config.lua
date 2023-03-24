@@ -473,5 +473,22 @@ lvim.plugins = {
     -- ledger plugin for (neo)vim
     "ledger/vim-ledger",
     ft = { "ledger" },
+  },
+  {
+    -- paste image from clipboard
+    "ekickx/clipboard-image.nvim",
+    ft = { "markdown" },
+    config = function()
+      require 'clipboard-image'.setup {
+        default = {
+          img_dir = { "%:p:h", "static" } -- Relative to current file
+        },
+        markdown = {
+          img_dir = { "%:p:h", "static" },
+          img_dir_txt = "static",
+          affix = "![clipboard_img](%s)"
+        }
+      }
+    end,
   }
 }
