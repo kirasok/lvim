@@ -5,5 +5,15 @@
         "lvim",
         "packer_plugins",
         "catppuccin"
+    ],
+    "workspace.library": [
+        "/usr/share/nvim/runtime",
+        "/home/v/.local/share/lunarvim/lvim",
+        "/home/v/.local/share/lunarvim/site/pack/lazy/opt/neodev.nvim/types/stable",
+        "${3rd}/busted/library",
+        "${3rd}/luassert/library",
+        "/home/v/.local/share/lunarvim/site/pack/lazy/opt/telescope.nvim/lua",
+        "/home/v/.local/share/lunarvim/site/pack/lazy/opt/plenary.nvim/lua",
+        "${3rd}/luv/library"
     ]
 }
