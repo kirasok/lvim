@@ -364,7 +364,7 @@ lvim.plugins = {
   {
     -- snippets for latex, thanks iurimateus and gillescastel
     "iurimateus/luasnip-latex-snippets.nvim",
-    ft = "tex",
+    ft = { "tex", "markdown" },
     dependencies = { "L3MON4D3/LuaSnip", "nvim-treesitter/nvim-treesitter" },
     config = function()
       require 'luasnip-latex-snippets'.setup({ use_treesitter = true })
@@ -465,3 +465,8 @@ lvim.plugins = {
     end,
   }
 }
+
+lvim.keys.insert_mode["<C-f>"] =
+"<cmd>exec '.!inkscape-figures create '.getline('.').' ./figures/'<CR><CR>"
+lvim.keys.normal_mode["<C-f>"] =
+"<cmd>exec '!inkscape-figures edit ./figures/ > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>"
