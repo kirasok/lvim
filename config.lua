@@ -471,3 +471,4 @@ lvim.keys.insert_mode["<C-f>"] =
 "<cmd>exec '.!inkscape-figures create '.getline('.').' ./figures/'<CR><CR>"
 lvim.keys.normal_mode["<C-f>"] =
 "<cmd>exec '!inkscape-figures edit ./figures/ > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>"
+lvim.keys.insert_mode["<C-k>"] = require("luasnip.extras.select_choice")
