@@ -42,6 +42,7 @@ local sources_to_delete = {
 local new_sources = vim.tbl_filter(function(source)
   return not vim.tbl_contains(sources_to_delete, source.name)
 end, lvim.builtin.cmp.sources)
+lvim.builtin.cmp.cmdline.enable = true
 
 -- vim.list_extend(new_sources, {
 --   -- { name = "git", priority_weight = 110 }, -- TODO: think about adding
