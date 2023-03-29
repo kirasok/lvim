@@ -1,11 +1,5 @@
 ---@diagnostic disable: undefined-global
 return {
-  s("ls", {
-    t({ "\\begin{itemize}", "\t\\item " }),
-    i(1),
-    d(2, rec_ls, {}), t({ "", "\\end{itemize}" }),
-    i(0),
-  }),
   s("template", {
     t({
       "\\documentclass[a4paper]{IEEEtran}",
