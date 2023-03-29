@@ -4,7 +4,8 @@
         "vim",
         "lvim",
         "packer_plugins",
-        "catppuccin"
+        "catppuccin",
+        "t"
     ],
     "workspace.library": [
         "/usr/share/nvim/runtime",
