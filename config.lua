@@ -464,6 +464,10 @@ lvim.plugins = {
         }
       }
     end,
+  },
+  {
+    -- surround with parentheses
+    "tpope/vim-surround"
   }
 }
 
