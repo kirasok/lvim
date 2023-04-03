@@ -56,6 +56,7 @@ lvim.lsp.installer.setup.automatic_installation = false   -- do not install lsp 
 require("lvim.lsp.manager").setup("nil")                  -- nix
 require("lvim.lsp.manager").setup("clangd")               -- c/c++
 require("lvim.lsp.manager").setup("texlab")               -- latex
+require("lvim.lsp.manager").setup("pyright")              -- python
 require("lvim.lsp.manager").setup("yaml-language-server") -- yaml (why not?)
 
 local formatters = require "lvim.lsp.null-ls.formatters"
@@ -65,9 +66,11 @@ formatters.setup {
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
   -- { name = "write_good" }, -- text/markdown/latex
+  { name = "flake8" }, -- python
 }
 local code_actions = require "lvim.lsp.null-ls.code_actions"
 code_actions.setup {
+  { name = "proselint" }, -- text/markdown
 }
 
 -- highlight luasnip nodes
@@ -230,7 +233,7 @@ lvim.plugins = {
       vim.cmd [[set backupcopy=yes]]
       lvim.builtin.which_key.mappings["z"] = {
         name = "Zettelkasten",
-        n = { "<cmd>ZkNew{ title = vim.fn.input('Title: ') }<CR>", "New note" },
+        n = { "<cmd>ZkNew{ title = vim.fn.input('Title: '), dir = vim.fn.input('Dir: ', './') }<CR>", "New note" },
         N = { "<cmd>'<,'>ZkNewFromTitleSelection<CR>", "New note (Title from VISUAL)" },
         b = { "<cmd>ZkBacklinks<CR>", "Notes linking to the current buffer" },
         l = { "<Cmd>ZkLinks<CR>", "Notes linked by the current buffer" },
