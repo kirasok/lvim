@@ -471,6 +471,24 @@ lvim.plugins = {
   {
     -- surround with parentheses
     "tpope/vim-surround"
+  },
+  {
+    "michaelb/sniprun",
+    build = "ls && bash ./install",
+    config = function()
+      require 'sniprun'.setup({
+        display = {
+          "VirtualText",
+        },
+      })
+      lvim.builtin.which_key.mappings["r"] = {
+        name = "Run",
+        r = { "<cmd>SnipRun<CR>", "Run code" },
+        i = { "<cmd>SnipInfo<CR>", "Info" },
+        R = { "<cmd>SnipReset<CR>", "Reset" },
+        c = { "<cmd>SnipClose<CR>", "Clear" },
+      }
+    end
   }
 }
 
