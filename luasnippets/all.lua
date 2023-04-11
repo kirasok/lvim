@@ -26,6 +26,7 @@ local parse = require("luasnip.util.parser").parse_snippet
 local ms = ls.multi_snippet
 
 return {
+  s("dtISO", t(os.date("!%Y-%m-%dT%TZ"))),
   s("veryaccurate", t("exact")),
   s("veryafraid", c(1, {
     t("fearful"),
