@@ -460,6 +460,19 @@ lvim.plugins = {
     'akinsho/toggleterm.nvim',
     version = "*",
     opts = { --[[ things you want to change go here]] }
+  },
+  {
+    'kirasok/cmp-hledger',
+    ft = "ledger",
+    config = function()
+      require('cmp').setup {
+        sources = {
+          {
+            name = 'hledger',
+          }
+        }
+      }
+    end
   }
 }
 
