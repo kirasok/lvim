@@ -4,8 +4,7 @@ lvim.format_on_save = true
 
 -- ui
 lvim.transparent_window = true
-vim.g.catppuccin_flavour = "mocha"
-lvim.colorscheme = "catppuccin"
+lvim.colorscheme = "onedark"
 vim.opt.wrap = true
 
 -- spell
@@ -27,14 +26,6 @@ lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
--- treesitter
-lvim.builtin.treesitter.ensure_installed = {
-  "latex",
-  "lua",
-  "markdown",
-}
-lvim.builtin.treesitter.highlight.enabled = true
-
 -- remove buffer as source
 local sources_to_delete = {
   "buffer",
@@ -44,9 +35,10 @@ local new_sources = vim.tbl_filter(function(source)
 end, lvim.builtin.cmp.sources)
 lvim.builtin.cmp.cmdline.enable = true
 
--- vim.list_extend(new_sources, {
---   -- { name = "git", priority_weight = 110 }, -- TODO: think about adding
--- })
+vim.list_extend(new_sources, {
+  { name = "git",  priority_weight = 110 },
+  { name = "papis" },
+})
 
 lvim.builtin.cmp.sources = new_sources
 
@@ -58,6 +50,9 @@ require("lvim.lsp.manager").setup("clangd")               -- c/c++
 require("lvim.lsp.manager").setup("texlab")               -- latex
 require("lvim.lsp.manager").setup("pyright")              -- python
 require("lvim.lsp.manager").setup("yaml-language-server") -- yaml (why not?)
+require("lvim.lsp.manager").setup("lemminx")              -- xml (why not?)
+require("lvim.lsp.manager").setup("kotlin-language-server")
+require("lvim.lsp.manager").setup("gopls")
 
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
@@ -65,12 +60,10 @@ formatters.setup {
 }
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
-  -- { name = "write_good" }, -- text/markdown/latex
   { name = "flake8" }, -- python
 }
 local code_actions = require "lvim.lsp.null-ls.code_actions"
 code_actions.setup {
-  { name = "proselint" }, -- text/markdown
 }
 
 -- highlight luasnip nodes
@@ -97,6 +90,7 @@ vim.g.livepreview_previewer = "zathura"
 -- Trouble keybinds BUG:should be move to it's respective plugin but not work here
 lvim.builtin.which_key.mappings["t"] = {
   name = "Trouble",
+  t = { "<cmd>Trouble<cr>", "Trouble" },
   r = { "<cmd>Trouble lsp_references<cr>", "References" },
   f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
   d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
@@ -111,20 +105,17 @@ lvim.builtin.which_key.mappings["t"] = {
 -- Additional Plugins
 lvim.plugins = {
   {
-    -- Catppuccin colorscheme
-    "catppuccin/nvim",
-    name = "catppuccin",
-  },
-  {
     -- Colorize colors
     "norcalli/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup({ "*" }, {
-        RGB = true,      -- #RGB hex codes
-        RRGGBB = true,   -- #RRGGBB hex codes
-        RRGGBBAA = true, -- #RRGGBBAA hex codes
-        rgb_fn = true,   -- CSS rgb() and rgba() functions hsl_fn = true, -- CSS hsl() and hsla() functions css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-        css_fn = true,   -- Enable all CSS *functions*: rgb_fn, hsl_fn
+        names    = true,  -- "Name" codes like Blue
+        hsl_fn   = false, -- CSS hsl() and hsla() functions
+        RGB      = true,  -- #RGB hex codes
+        RRGGBB   = true,  -- #RRGGBB hex codes
+        RRGGBBAA = true,  -- #RRGGBBAA hex codes
+        rgb_fn   = true,  -- CSS rgb() and rgba() functions hsl_fn = true, -- CSS hsl() and hsla() functions css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+        css_fn   = true,  -- Enable all CSS *functions*: rgb_fn, hsl_fn
       })
     end,
   },
@@ -145,15 +136,6 @@ lvim.plugins = {
     -- list checkers messages
     "folke/trouble.nvim",
     cmd = "TroubleToggle",
-    config = function()
-
-    end,
-  },
-  {
-    -- perview markdown in browser
-    "iamcco/markdown-preview.nvim",
-    build = "cd app && npm install",
-    ft = "markdown",
   },
   {
     -- open fiels in the last place you left
@@ -169,23 +151,6 @@ lvim.plugins = {
       })
     end,
   },
-  -- {
-  --   -- saves sessions for quick open
-  --   "folke/persistence.nvim",
-  --   event = "BufReadPre", -- this will only start session saving when an actual file was opened
-  --   config = function()
-  --     require("persistence").setup {
-  --       dir = vim.fn.expand(vim.fn.stdpath "config" .. "/session/"),
-  --       options = { "buffers", "curdir", "tabpages", "winsize" },
-  --     }
-  --     lvim.builtin.which_key.mappings["S"] = {
-  --       name = "Session",
-  --       c = { "<cmd>lua require('persistence').load()<cr>", "Restore last session for current dir" },
-  --       l = { "<cmd>lua require('persistence').load({ last = true })<cr>", "Restore last session" },
-  --       Q = { "<cmd>lua require('persistence').stop()<cr>", "Quit without saving session" },
-  --     }
-  --   end,
-  -- },
   {
     -- Colorize words
     "folke/todo-comments.nvim",
@@ -193,10 +158,6 @@ lvim.plugins = {
     event = "BufRead",
     config = function()
       require("todo-comments").setup()
-      -- lvim.builtin.which_key.mappings["t"] = {
-      --   name = "Trouble",
-      --   t = { "<cmd>TodoTrouble<CR>", "List todos" }
-      -- } -- BUG: overrides mappings for trouble
     end,
   },
   {
@@ -219,9 +180,6 @@ lvim.plugins = {
     cmd = { "Bracey", "BracyStop", "BraceyReload", "BraceyEval" },
     build = "npm install --prefix server",
   },
-  -- {
-  --   "dbeniamine/cheat.sh-vim" -- use cheat.sh
-  -- },
   {
     -- manage zettelkasten
     "mickael-menu/zk-nvim",
@@ -453,7 +411,8 @@ lvim.plugins = {
   },
   {
     -- paste image from clipboard
-    "ekickx/clipboard-image.nvim",
+    -- WARN: use of fork until upstream fixes health
+    "kirasok/clipboard-image.nvim",
     ft = { "markdown" },
     config = function()
       require 'clipboard-image'.setup {
@@ -470,25 +429,37 @@ lvim.plugins = {
   },
   {
     -- surround with parentheses
-    "tpope/vim-surround"
+    'kylechui/nvim-surround',
+    dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup({
+        -- Configuration here, or leave empty to use defaults
+      })
+    end
   },
   {
-    "michaelb/sniprun",
-    build = "ls && bash ./install",
-    config = function()
-      require 'sniprun'.setup({
-        display = {
-          "VirtualText",
-        },
-      })
-      lvim.builtin.which_key.mappings["r"] = {
-        name = "Run",
-        r = { "<cmd>SnipRun<CR>", "Run code" },
-        i = { "<cmd>SnipInfo<CR>", "Info" },
-        R = { "<cmd>SnipReset<CR>", "Reset" },
-        c = { "<cmd>SnipClose<CR>", "Clear" },
-      }
-    end
+    "luizribeiro/vim-cooklang",
+    ft = { "cook" },
+  },
+  { 'navarasu/onedark.nvim' },
+  -- {
+  --   "jghauser/papis.nvim",
+  --   dependencies = {
+  --     "kkharji/sqlite.lua",
+  --     "nvim-lua/plenary.nvim",
+  --     "MunifTanjim/nui.nvim",
+  --     "nvim-treesitter/nvim-treesitter",
+  --   },
+  --   config = function()
+  --     require("papis").setup({
+  --     })
+  --   end,
+  -- },
+  {
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    opts = { --[[ things you want to change go here]] }
   }
 }
 
@@ -497,3 +468,4 @@ lvim.keys.insert_mode["<C-f>"] =
 lvim.keys.normal_mode["<C-f>"] =
 "<cmd>exec '!inkscape-figures edit ./figures/ > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>"
 lvim.keys.insert_mode["<C-k>"] = require("luasnip.extras.select_choice")
+lvim.keys.insert_mode["jj"] = "<ESC>"
