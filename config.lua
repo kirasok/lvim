@@ -6,6 +6,7 @@ lvim.format_on_save = true
 lvim.transparent_window = true
 lvim.colorscheme = "onedark"
 vim.opt.wrap = true
+vim.opt.conceallevel = 2
 
 -- spell
 vim.opt.spell = true -- enable only in specific files
@@ -323,15 +324,16 @@ lvim.plugins = {
       }
     end
   },
-  {
-    -- snippets for latex, thanks iurimateus and gillescastel
-    "iurimateus/luasnip-latex-snippets.nvim",
-    ft = { "tex", "markdown" },
-    dependencies = { "L3MON4D3/LuaSnip", "nvim-treesitter/nvim-treesitter" },
-    config = function()
-      require 'luasnip-latex-snippets'.setup({ use_treesitter = true })
-    end,
-  },
+  -- TODO: fix appearing in markdown outside latex context
+  -- {
+  --   -- snippets for latex, thanks iurimateus and gillescastel
+  --   "iurimateus/luasnip-latex-snippets.nvim",
+  --   ft = { "tex", "markdown" },
+  --   dependencies = { "L3MON4D3/LuaSnip", "nvim-treesitter/nvim-treesitter" },
+  --   config = function()
+  --     require 'luasnip-latex-snippets'.setup({ use_treesitter = true })
+  --   end,
+  -- },
   {
     -- configs texlab to sync cursor position with zathura BUG: not working
     'f3fora/nvim-texlabconfig',
@@ -376,7 +378,6 @@ lvim.plugins = {
     'KeitaNakamura/tex-conceal.vim',
     ft = "tex",
     config = function()
-      vim.opt.conceallevel = 2
       vim.g["tex_conceal"] = "abdgm"
     end,
   },
@@ -465,15 +466,15 @@ lvim.plugins = {
     'kirasok/cmp-hledger',
     ft = "ledger",
     config = function()
-      require('cmp').setup {
-        sources = {
-          {
-            name = 'hledger',
-          }
-        }
-      }
+      local cmp = require('cmp')
+      local config = cmp.get_config()
+      table.insert(config.sources, {
+        name = 'hledger',
+      })
+      cmp.setup(config)
     end
-  }
+  },
+  { url = 'https://github.com/73/vim-klog' }
 }
 
 lvim.keys.insert_mode["<C-f>"] =
