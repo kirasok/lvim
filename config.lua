@@ -10,7 +10,7 @@ vim.opt.conceallevel = 2
 
 -- spell
 vim.opt.spell = true -- enable only in specific files
-vim.opt.spelllang = { "en", "ru" }
+vim.opt.spelllang = { "en", "es", "ru" }
 lvim.keys.insert_mode["<C-l>"] = "<Esc>[s1z=`]a"
 
 -- keymappings [view all the defaults by pressing <leader>Lk]
